@@ -30,6 +30,8 @@ func main() {
 	}
 
 	router := gin.Default()
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowHeaders = []string{"Authorization", "Origin", "Content-Type"}
 	router.Use(cors.Default())
 
 	router.GET("/login", func(c *gin.Context) {
