@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,10 +31,15 @@ func main() {
 	}
 
 	router := gin.Default()
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowHeaders = []string{"Authorization", "Origin", "Content-Type"}
-	corsConfig.AllowAllOrigins = true
-	router.Use(cors.New(corsConfig))
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5000"},
+		AllowMethods:     []string{"POST", "GET", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.GET("/login", func(c *gin.Context) {
 		c.Redirect(302, authHandler.GetRedirectURL(os.Getenv("CALLBACK_URL")))
