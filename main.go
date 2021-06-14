@@ -32,7 +32,8 @@ func main() {
 	router := gin.Default()
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowHeaders = []string{"Authorization", "Origin", "Content-Type"}
-	router.Use(cors.Default())
+	corsConfig.AllowAllOrigins = true
+	router.Use(cors.New(corsConfig))
 
 	router.GET("/login", func(c *gin.Context) {
 		c.Redirect(302, authHandler.GetRedirectURL(os.Getenv("CALLBACK_URL")))
