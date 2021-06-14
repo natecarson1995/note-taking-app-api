@@ -34,6 +34,7 @@ func main() {
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:5000"}
 	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowHeaders("authorization")
 	router.Use(cors.New(corsConfig))
 
 	router.GET("/login", func(c *gin.Context) {
