@@ -29,7 +29,6 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(CORSMiddleware())
 
 	router.GET("/login", func(c *gin.Context) {
 		c.Redirect(302, authHandler.GetRedirectURL(os.Getenv("CALLBACK_URL")))
@@ -121,6 +120,7 @@ func main() {
 		c.String(200, "Success")
 	})
 
+	router.Use(CORSMiddleware())
 	router.Run()
 }
 
