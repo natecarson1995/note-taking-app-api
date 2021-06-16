@@ -53,7 +53,7 @@ func main() {
 
 		result, err := noteHandler.GetNoteByID(id)
 		if err != nil {
-			c.AbortWithStatus(404)
+			c.AbortWithStatus(500)
 			return
 		}
 		if result.Author != userInfo.Sub {
@@ -88,7 +88,7 @@ func main() {
 		var note Note
 		if c.ShouldBind(&note) == nil {
 			if note.Author != userInfo.Sub {
-				c.AbortWithStatus(402)
+				c.AbortWithStatus(401)
 				return
 			}
 
@@ -102,7 +102,7 @@ func main() {
 			c.JSON(200, result)
 			return
 		}
-		c.AbortWithStatus(402)
+		c.AbortWithStatus(400)
 	})
 
 	router.DELETE("/notes/:id", authMiddleware, func(c *gin.Context) {
@@ -112,11 +112,11 @@ func main() {
 
 		currentNote, err := noteHandler.GetNoteByID(id)
 		if err != nil {
-			c.AbortWithStatus(404)
+			c.AbortWithStatus(500)
 			return
 		}
 		if currentNote.Author != userInfo.Sub {
-			c.AbortWithStatus(402)
+			c.AbortWithStatus(401)
 			return
 		}
 
