@@ -31,6 +31,11 @@ func main() {
 
 	router := gin.Default()
 
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
+	router.Use(cors.New(corsConfig))
+
 	router.GET("/login", func(c *gin.Context) {
 		c.Redirect(302, authHandler.GetRedirectURL(os.Getenv("CALLBACK_URL")))
 	})
@@ -121,9 +126,5 @@ func main() {
 		c.String(200, "Success")
 	})
 
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
-	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
-	router.Use(cors.New(corsConfig))
 	router.Run()
 }
