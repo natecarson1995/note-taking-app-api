@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -30,11 +29,7 @@ func main() {
 	}
 
 	router := gin.Default()
-
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowAllOrigins = true
-	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
-	router.Use(cors.New(corsConfig))
+	router.Use(CORSMiddleware())
 
 	router.GET("/login", func(c *gin.Context) {
 		c.Redirect(302, authHandler.GetRedirectURL(os.Getenv("CALLBACK_URL")))
@@ -49,6 +44,7 @@ func main() {
 			c.AbortWithStatus(404)
 		}
 
+		c.Header("Access-Control-Allow-Origin", "*")
 		c.JSON(200, notes)
 	})
 	router.GET("/notes/:id", authMiddleware, func(c *gin.Context) {
@@ -65,7 +61,6 @@ func main() {
 			c.AbortWithStatus(401)
 			return
 		}
-
 		c.JSON(200, result)
 	})
 
@@ -127,4 +122,20 @@ func main() {
 	})
 
 	router.Run()
+}
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Authorization")
+		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
