@@ -122,6 +122,7 @@ func main() {
 	})
 
 	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
 	corsConfig.AddAllowHeaders("Authorization", "Content-Type")
 	router.Use(cors.New(corsConfig))
 	router.Run()
