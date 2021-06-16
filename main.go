@@ -84,11 +84,21 @@ func main() {
 	router.POST("/notes/:id", authMiddleware, func(c *gin.Context) {
 		userData, _ := c.Get("userInfo")
 		userInfo := userData.(*UserInfo)
+		id := c.Param("id")
+		currentNote, err := noteHandler.GetNoteByID(id)
+		if err != nil {
+			c.AbortWithStatus(500)
+			return
+		}
+		if currentNote.Author != userInfo.Sub {
+			c.AbortWithStatus(401)
+			return
+		}
 
 		var note Note
 		if c.ShouldBind(&note) == nil {
 			note.Author = userInfo.Sub
-			note.ID = c.Param("id")
+			note.ID = id
 			result, err := noteHandler.UpdateNote(&note)
 			if err != nil {
 				c.AbortWithStatus(500)

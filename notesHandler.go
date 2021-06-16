@@ -75,12 +75,6 @@ func (noteHandler *NoteHandler) UpdateNote(note *Note) (*Note, error) {
 		return nil, errors.New("file with this ID doesn't exist")
 	}
 
-	var currentNote Note
-	snapshot.DataTo(&currentNote)
-	if currentNote.Author != note.Author {
-		return nil, errors.New("unauthorized to edit this note")
-	}
-
 	_, err = ref.Update(noteHandler.Context, []firestore.Update{
 		{
 			Path:  "Title",
