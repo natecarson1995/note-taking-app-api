@@ -44,7 +44,6 @@ func main() {
 			c.AbortWithStatus(404)
 		}
 
-		c.Header("Access-Control-Allow-Origin", "*")
 		c.JSON(200, notes)
 	})
 	router.GET("/notes/:id", authMiddleware, func(c *gin.Context) {

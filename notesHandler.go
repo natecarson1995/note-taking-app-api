@@ -9,9 +9,9 @@ import (
 )
 
 type Note struct {
-	ID     string `form: "id" json: "ID"`
-	Title  string `form: "title" json: "Title"`
-	Text   string `form: "text" json:"Text"`
+	ID     string `json:"ID"`
+	Title  string `json:"Title"`
+	Text   string `json:"Text"`
 	Author string `json:"-"`
 }
 
@@ -110,6 +110,7 @@ func (noteHandler *NoteHandler) GetNotesByAuthor(author string) ([]Note, error) 
 	notes := make([]Note, len(docs))
 	for i, docSnapshot := range docs {
 		docSnapshot.DataTo(&notes[i])
+		notes[i].ID = docSnapshot.Ref.ID
 	}
 	return notes, nil
 }
