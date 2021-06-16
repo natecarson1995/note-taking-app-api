@@ -87,11 +87,7 @@ func main() {
 
 		var note Note
 		if c.ShouldBind(&note) == nil {
-			if note.Author != userInfo.Sub {
-				c.AbortWithStatus(401)
-				return
-			}
-
+			note.Author = userInfo.Sub
 			note.ID = c.Param("id")
 			result, err := noteHandler.UpdateNote(&note)
 			if err != nil {
